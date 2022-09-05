@@ -105,10 +105,12 @@
 
                     function dialogInput() {
                         $(".panel-body").html(form.el);
-                        $('#c1_user').selectize({
+                        var selectize = $('#c1_user').selectize({
                             maxItems: null,//limit for user to select at a time
                             create: false, //allow user to add custom tags
-                        });
+                            closeAfterSelect: true,
+                            allowEmptyOption:false
+                        })[0].selectize.clear();
                         $(".selectize-control").removeClass('form-control');
                         swal({
                             title: "Are you sure?",
@@ -126,6 +128,9 @@
                                 $(".sweet-alert").remove();
                                 if (rel) {
                                     swal("Deleted!", newOwner, "success");
+
+                                    $(".sweet-overlay").remove();
+                                    $(".sweet-alert").remove();
                                 }
                             });
                     }
