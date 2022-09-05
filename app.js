@@ -16,18 +16,13 @@ app.get("/",function(req,res)
 {   
     res.render("form");
 });
-//HOME
-app.get("/sweet",function(req,res)
+//route forsweetalert
+app.get("/swal",function(req,res)
 {   
     res.render("sweetalert");
 });
-//HOME
-app.get("/dialog",function(req,res)
+//route for selectize
+app.get("/selectize",function(req,res)
 {   
-    res.render("dialog");
-});
-//HOME
-app.get("/test",function(req,res)
-{   
-    res.render("form");
+    res.render("selectize");
 });
