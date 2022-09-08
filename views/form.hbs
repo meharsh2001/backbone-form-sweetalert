@@ -28,6 +28,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.6/js/standalone/selectize.min.js"
         integrity="sha512-pgmLgtHvorzxpKra2mmibwH/RDAVMlOuqU98ZjnyZrOZxgAR8hwL8A02hQFWEK25V40/9yPYb/Zc+kyWMplgaA=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"
+        integrity="sha512-RNLkV3d+aLtfcpEyFG8jRbnWHxUqVZozacROI4J2F1sTaDqo1dPQYs01OMi1t1w9Y2FdbSCDSQ2ZVdAC8bzgAg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <link rel="stylesheet/less" type="text/css" href="styles.less" />
     <style>
         .right {
             text-align: right;
@@ -46,6 +51,28 @@
             margin: 50px;
             display: block;
         }
+
+        input[type='text'] {
+            height: 10px;
+        }
+
+        .item,
+        .selectize-dropdown .selectize-input {
+            text-align: left;
+        }
+
+        .selectize-dropdown,
+        .single,
+        .form-control {
+            text-align: left;
+        }
+
+        .option {
+            background-color: white;
+            text-align: left;
+            font-weight: bold;
+            background: white;
+        }
     </style>
 </head>
 
@@ -62,10 +89,11 @@
     </div>
     <script type="text/javascript">
         $(function () {
-            var userData = ['meharsh2001@gmail.com', 'harsh.jain@srrintl.com', 'Userc', 'Userd']
+            var userData = ['meharsh2001@gmail.com', 'chetansachdev@', 'rekha@']
             var schemaForm = Backbone.Model.extend({
                 schema: {
-                    user: { type: 'Select', options: userData }
+                    transfer: { type: 'Select', options: userData },
+                    share: { type: 'Select', options: userData }
                 }
             });
 
@@ -104,14 +132,77 @@
                     } else dialogInput()
 
                     function dialogInput() {
+                        var userCollection = [
+                            { "id": 861, "name": "harsh jain", "email": 'meharsh2001@gmail.com' },
+                            { "id": 111, "name": "Chetan Sachdev", "email": 'chetansachdev@' },
+                            { "id": 394, "name": "Rekha", "email": 'rekha@' }
+                        ]
+                        function disableOption() {
+                            var transferValue = $('#c1_transfer').text();
+                            for (i = 0; i < userCollection.length; i++) {
+                                if (userCollection[i].email === transferValue) {
+                                    transferValue = userCollection[i].name + ' ' + '<' + userCollection[i].email + '>';
+                                }
+                            }
+                            $('.multi .selectize-dropdown-content div').each(function (index) {
+                                $(this).removeAttr('data-disabled', 'true')
+                                var shareValue = $(this).text();
+                                if (transferValue === shareValue) {
+                                    $(this).attr('data-disabled', 'true')
+                                } else {
+                                console.log(transferValue, shareValue)
+                                }
+                            })
+                        }
                         $(".panel-body").html(form.el);
-                        var selectize = $('#c1_user').selectize({
-                            maxItems: null,//limit for user to select at a time
+                        $(".field-share").attr('style', 'display:none;');
+                        $('#c1_transfer').selectize({
+                            maxItems: 1,//limit for user to select at a time
                             create: false, //allow user to add custom tags
                             closeAfterSelect: true,
-                            allowEmptyOption:false
+                            allowEmptyOption: false,
+                            options: userCollection,
+                            render: {
+                                option: function (item, escape) {
+                                    return '<div>'
+                                        + '<span"><b>' + item.name + '</b></span> '
+                                        + '<span style="margin-left:5px;">&lt;' + item.email + '&gt;</span>'
+                                        + '</div>';
+                                }
+                            },
+                            onChange: function () {
+                                var transferValue = $('#c1_transfer').val()
+                                disableOption()
+                                $('#c1_share').selectize({
+                                    maxItems: null,
+                                    options: userCollection,
+                                    create: false,
+                                    render: {
+                                        option: function (item, escape) {
+                                            if ($('#c1_transfer').val() === item.email) {
+                                                return '<div data-disabled="true">'
+                                                    + '<span"><b>' + item.name + '</b></span> '
+                                                    + '<span style="margin-left:5px;">&lt;' + item.email + '&gt;</span>'
+                                                    + '</div>';
+                                            } else {
+                                                return '<div>'
+                                                    + '<span"><b>' + item.name + '</b></span> '
+                                                    + '<span style="margin-left:5px;">&lt;' + item.email + '&gt;</span>'
+                                                    + '</div>';
+                                            }
+                                        }
+                                    },
+                                    onChange: function () {
+                                        disableOption()
+                                    },
+                                })[0].selectize.clear();
+                                $(".selectize-control").removeClass('form-control');
+                                $(".field-share").removeAttr('style', 'display:none;');
+                            }
                         })[0].selectize.clear();
+                         disableOption()
                         $(".selectize-control").removeClass('form-control');
+
                         swal({
                             title: "Are you sure?",
                             text: "delete user",
