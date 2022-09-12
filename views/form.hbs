@@ -148,9 +148,9 @@
                                 $(this).removeAttr('data-disabled', 'true')
                                 var shareValue = $(this).text();
                                 if (transferValue === shareValue) {
+                                    console.log(transferValue, shareValue)
                                     $(this).attr('data-disabled', 'true')
                                 } else {
-                                console.log(transferValue, shareValue)
                                 }
                             })
                         }
@@ -172,7 +172,6 @@
                             },
                             onChange: function () {
                                 var transferValue = $('#c1_transfer').val()
-                                disableOption()
                                 $('#c1_share').selectize({
                                     maxItems: null,
                                     options: userCollection,
@@ -191,16 +190,15 @@
                                                     + '</div>';
                                             }
                                         }
-                                    },
-                                    onChange: function () {
+                                    }, onDropdownOpen: function () {
                                         disableOption()
-                                    },
+                                    }
                                 })[0].selectize.clear();
                                 $(".selectize-control").removeClass('form-control');
                                 $(".field-share").removeAttr('style', 'display:none;');
                             }
                         })[0].selectize.clear();
-                         disableOption()
+                        disableOption()
                         $(".selectize-control").removeClass('form-control');
 
                         swal({
