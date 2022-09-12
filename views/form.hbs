@@ -212,16 +212,28 @@
                             //closeOnCancel: false
                         },
                             function (rel) {
-                                var newOwner = $("select[name='user']").val();
-                                $(".sweet-overlay").remove();
-                                $(".sweet-alert").remove();
+                                var newOwner = $('#c1_transfer').val();
+                                var shareValue = $('#c1_share').val()
+                                $(".panel-body").remove()
                                 if (rel) {
-                                    swal("Deleted!", newOwner, "success");
-
-                                    $(".sweet-overlay").remove();
-                                    $(".sweet-alert").remove();
+                                    swal({
+                                        title: "Deleted!" + newOwner,
+                                        text: "course shared with" + shareValue,
+                                        type: "success",
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#DD6B55',
+                                        confirmButtonText: 'ok',
+                                        closeOnConfirm: false,
+                                    },
+                                        function (res) {
+                                            var newOwner = $('#c1_transfer').val();
+                                            var shareValue = $('#c1_share').val()
+                                            $(".panel-body").remove()
+                                            if (res) {
+                                                window.location.reload();
+                                            }
+                                        });
                                 }
-                                window.location.reload();
                             });
                     }
                 }
